@@ -1,0 +1,39 @@
+# environments and caches
+.venv*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.cache/
+.hf-cache/
+*.log
+
+# secrets - API keys of the benchmark LLM calls are read from these files, never committed
+.env
+.env.*
+rag/benchmark/.mistral-key
+rag/benchmark/.google-key
+
+# the corpus and everything derived from it stay private (third-party copyrighted documents)
+data/
+qdrant_storage_local/
+qdrant_storage_local.*/
+rag/logs/
+rag/metadata/*.json
+rag/tables/*.json
+rag/titles/*.json
+rag/graph/*.json
+rag/ingestion/*.json
+rag/ingestion/*.jsonl
+rag/ingestion/source-b/
+rag/ingestion/journal/
+rag/ingestion/tests/fixtures/
+rag/benchmark/questions-*.jsonl
+rag/benchmark/results-*.json
+rag/benchmark/human-v1/**/*.json
+rag/benchmark/human-v1/**/*.jsonl
+rag/gel-corpus.json
+
+# local tooling
+.claude/
+.DS_Store

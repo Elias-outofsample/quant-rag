@@ -1,0 +1,104 @@
+{
+ "_lisez_moi": "Prix publics des modèles appelés par le dépôt, RELEVÉS et DATÉS, jamais estimés. Sans ce fichier, llm.py compte des jetons et ne sait rien dire du budget : le dépôt a fonctionné jusqu'ici avec une seule estimation, « ~0,001 € par appel mistral-small-latest » (TODOLIST-AMELIORATION.md l. 289, 2 septembre 2026), non implémentée et non sourcée. Les prix sont en USD par million de jetons, tels que publiés ; la conversion en euros passe par le taux daté ci-dessous et le résultat porte toujours ces deux dates. Ce fichier doit être RELEVÉ À NOUVEAU quand une mesure engage une dépense réelle : un prix vieux de plusieurs mois transforme un budget en fiction.",
+ "_fusion_2026_09_09": "Ce fichier est né deux fois le 8 septembre 2026 — une fois sur contrat-de-sortie pour llm.py, une fois sur instrument-v4 pour banc_v4.py — avec deux schémas incompatibles (`entree`/`sortie` contre `entree_par_million`/`sortie_par_million`) et deux conventions de change. L'intégration du 9 septembre les unifie sur le schéma de contrat-de-sortie, seul lu par llm.py, et y verse ce qu'instrument-v4 avait relevé en plus : ministral-8b-latest, le détail du palier gratuit de gemini-3.1-flash-lite et le contrôle de grandeur. banc_v4.chiffrer() passe désormais par llm.cout_usd() : il n'y a plus qu'un seul analyseur de barème dans le dépôt. Le piège fermé au passage : avec l'ancien code, un modèle présent au barème mais sans les clés attendues valait 0,00 USD tout en affichant `tarif_connu: true`.",
+ "releve_le": "2026-09-08",
+ "devise": "USD",
+ "unite": "USD par million de jetons",
+ "taux_usd_par_eur": {
+  "valeur": 1.1622,
+  "date": "2026-09-05",
+  "source": "Banque centrale européenne, taux de référence quotidien euro/USD",
+  "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html",
+  "note": "Nombre de dollars pour UN euro. Un coût en euros vaut donc coût_usd / 1.1622."
+ },
+ "conventions": {
+  "_": "Deux chiffres en euros circulent dans le dépôt. Ils ne mesurent pas la même chose et se citent toujours avec leur nom.",
+  "cout_eur": "coût_usd / taux_usd_par_eur, au taux daté ci-dessus. C'est la dépense réelle. Rendu par llm.cout_eur() et par la clé `total_eur` de banc_v4.chiffrer().",
+  "total_eur_majore": "coût_usd compté tel quel, 1 USD pour 1 EUR. L'euro valant plus que le dollar, cette convention MAJORE la dépense — c'est le sens prudent pour un plafond, et c'est celle qu'instrument-v4 a utilisée pour tous ses chiffres publiés. Conservée pour que ces chiffres restent lisibles ; ne jamais l'additionner avec cout_eur.",
+  "None_n_est_pas_zero": "Un modèle absent du barème rend None, jamais 0.0 : le premier dit « je ne sais pas », le second « c'était gratuit ». Confondre les deux sous-estime une dépense sans le dire."
+ },
+ "avertissement_alias": "Les identifiants utilisés par le dépôt sont des alias `-latest`. La page de prix nomme des versions (« Mistral Small 4 », « Mistral Medium 3.5 »), pas des alias. L'association ci-dessous est une INFÉRENCE (l'alias pointe la version courante de sa famille), pas un fait relevé. Elle est prudente : elle retient le prix de la version la plus chère plausible. À revérifier sur console.mistral.ai avant toute dépense importante.",
+ "modeles": {
+  "mistral-small-latest": {
+   "nom_publie": "Mistral Small 4",
+   "alias_de": "Mistral Small 4 (inféré)",
+   "entree": 0.15,
+   "sortie": 0.6,
+   "source": "https://mistral.ai/pricing/api",
+   "releve_le": "2026-09-08",
+   "role": "générateur des réponses évaluées, et auteur des questions"
+  },
+  "mistral-medium-latest": {
+   "nom_publie": "Mistral Medium 3.5",
+   "alias_de": "Mistral Medium 3.5 (inféré)",
+   "entree": 1.5,
+   "sortie": 7.5,
+   "source": "https://mistral.ai/pricing/api",
+   "releve_le": "2026-09-08",
+   "role": "juge de référence (exactitude 0,889, edd799f)"
+  },
+  "ministral-8b-latest": {
+   "alias_de": "Ministral 3 (8B) (inféré)",
+   "entree": 0.15,
+   "sortie": 0.15,
+   "source": "https://mistral.ai/pricing/api",
+   "releve_le": "2026-09-08",
+   "role": "auteur de la famille negative_voisine depuis le 9 septembre 2026 (amendement n° 4) — 76 appels, 0,0119 USD"
+  },
+  "gemini-3.5-flash": {
+   "entree": 1.5,
+   "sortie": 9.0,
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "releve_le": "2026-09-08",
+   "palier_gratuit": true,
+   "role": "repli quand le compte Mistral est bloqué"
+  },
+  "gemini-3.6-flash": {
+   "entree": 0.75,
+   "sortie": 3.75,
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "releve_le": "2026-09-08",
+   "palier_gratuit": true,
+   "note": "tarif promotionnel jusqu'au 31 décembre 2026 ; 1,50 / 7,50 à partir du 1er janvier 2027"
+  },
+  "gemini-3.7-flash": {
+   "entree": 0.75,
+   "sortie": 3.75,
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "releve_le": "2026-09-08",
+   "palier_gratuit": true,
+   "note": "tarif promotionnel jusqu'au 31 décembre 2026 ; 1,50 / 7,50 à partir du 1er janvier 2027"
+  },
+  "gemini-3.8-flash": {
+   "entree": 0.75,
+   "sortie": 3.75,
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "releve_le": "2026-09-08",
+   "palier_gratuit": true,
+   "note": "tarif promotionnel jusqu'au 31 décembre 2026 ; 1,50 / 7,50 à partir du 1er janvier 2027"
+  },
+  "gemini-3.1-flash-lite": {
+   "entree": 0.25,
+   "sortie": 1.5,
+   "source": "https://ai.google.dev/gemini-api/docs/pricing",
+   "releve_le": "2026-09-08",
+   "palier_gratuit": true,
+   "palier_gratuit_detail": {
+    "cout": "entrée et sortie gratuites sous le plafond",
+    "plafond_journalier_requetes": 500,
+    "source_du_plafond": "rag/benchmark/README.md et docs/TODO.md du dépôt — non revérifié sur la page de prix, qui ne publie plus de RPD par modèle",
+    "remise_a_zero": "09:00 heure locale"
+   },
+   "note": "0,50 en entrée pour l'audio ; le banc n'envoie que du texte. Le barème porte le prix HORS palier gratuit (0,25 / 1,50), pas 0,00 : un coût calculé dessus est donc un MAJORANT tant que le palier tient. instrument-v4 avait au contraire inscrit 0,00 et publié ses coûts d'écriture de questions comme nuls ; ses chiffres publiés restent lus à cette convention et se citent tels quels. Les runs de MESURE du banc n'appellent ni auteur ni repli — générateur et juge seulement — donc aucun chiffre de run n'est déplacé par ce choix.",
+   "role": "auteur des questions v4 — différent du générateur, et gratuit sous le plafond"
+  }
+ },
+ "controle_de_grandeur": {
+  "_": "Vérification que ces prix reproduisent un coût déjà observé, plutôt que de les prendre sur parole.",
+  "run": "fil characters (results-characters-5530cba145.json)",
+  "mesure": "1 040 appels, 3,02 M jetons d'entrée, 0,10 M de sortie, générateur small + juge medium",
+  "borne_haute_si_tout_en_medium": "3,02 x 1,5 + 0,10 x 7,5 = 5,28 USD",
+  "borne_basse_si_tout_en_small": "3,02 x 0,15 + 0,10 x 0,6 = 0,51 USD",
+  "lecture": "Un run de 1 040 appels sur 130 questions coûte entre 0,5 et 5,3 USD selon la part de juge. C'est l'ordre de grandeur qui borne le plafond de 9 EUR du chantier instrument-v4 : DEUX runs de cette taille ne tiennent pas dans le budget. Les runs v4 sont dimensionnés en conséquence."
+ }
+}

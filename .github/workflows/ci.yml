@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install (no model weights, no corpus)
+        run: pip install -e ".[dev]"
+      - name: Lint (syntax errors and undefined names)
+        run: ruff check --select E9,F63,F7,F82 rag src tests
+      - name: Tests
+        # Tests that read the private corpus are skipped with the missing path (rag/conftest.py).
+        run: pytest -n auto -rs
